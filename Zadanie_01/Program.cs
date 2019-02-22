@@ -14,9 +14,24 @@ namespace Zadanie_01
         static void Main(string[] args)
         {
             Console.WriteLine("Procesing...");
-            var doneTask = Worker.DoWorkAsync(5);
+            var doneTask = new Task(()=> Worker.DoWorkAsync(5));
 
-            bool done = doneTask.Result;
+            var task2 = new Task(() =>
+            {
+                for (int i = 0; i < 100; i++)
+                {
+                    Thread.Sleep(100);
+                    Console.Write("+");
+                }
+
+                Console.WriteLine();
+            });
+
+            task2.Start();
+            doneTask.Start();
+
+            Task.WaitAll(doneTask);
+            bool done = doneTask.IsCompleted;
 
             if (done)
             {
@@ -26,8 +41,12 @@ namespace Zadanie_01
             {
                 Console.WriteLine("not done!");
             }
-            
+
+
+            Console.WriteLine("end of program");
             Console.Read();
         }
+
+        
     }
 }
